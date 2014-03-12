@@ -16,13 +16,13 @@ It uses [Bootstrap](http://getbootstrap.com) for the layout.
 
 ## FAQ
 
-1. How to change the user email?
+1. How do I change the user email?
   * Go to the `app/seeds/UsersTableSeeder.php` change the email and passord and run the migrations/seeds again `php artisan migrate:refresh --seed` 
 
-2. How to change the email template?
+2. How do I change the email template?
   * Go to `app/views/emails/auth/reminder.blade.php` and change the template
 
-3. How to redirect to the admin dashboard after login?
+3. How do I redirect to the admin dashboard after login?
   * Go to `app/controllers/AuthController.php L:42` and make your changes.
 
 

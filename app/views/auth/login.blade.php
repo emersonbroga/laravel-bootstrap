@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -51,7 +50,7 @@
         
         {{ Form::submit('Sign in', array('class' => 'btn btn-lg btn-primary btn-block')) }}
         <span class="pull-right">
-          <a href="/remind">Forgot passord</a>
+          <a href="/remind">Forgot password</a>
         </span>
       {{ Form::close() }}
 

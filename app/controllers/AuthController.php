@@ -39,7 +39,7 @@ class AuthController extends Controller
         {	
         	// redirects the user to the admin dashboard.
             // return Redirect::intended('admin/dashboard');
-            die('Welcome to the admin dashboard.');
+            die('Welcome to the admin dashboard. <a href="/logout">Logout</a>');
         }
 
         return Redirect::action('AuthController@login')

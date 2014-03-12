@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -31,7 +30,7 @@
   <body>
 
     <div class="container">
-      {{ Form::open(array( 'url' => '/password/reset/process', 'class' => 'form-center', 'role' => 'form' )) }}
+      {{ Form::open(array( 'action' => 'AuthController@postReset', 'class' => 'form-center', 'role' => 'form' )) }}
 
         @if(Session::has('error'))
             <div class="alert alert-danger">{{ Session::get('error') }}</div>

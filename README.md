@@ -9,7 +9,7 @@ It uses [Bootstrap](http://getbootstrap.com) for the layout.
 1. Go to the project folder and run `composer update` to install the dependencies
 2. Set the database configs at `app/config/database.php`
 3. Set the email configs at `app/config/mail.php`
-4. Run the migrantions and seed `php artisan migrate:refresh --seed`
+4. Run the migrantions `php artisan migrate` and seed `php artisan db:seed`
 5. Go to the project url and you will see the login button
   * You can use the email `admin@admin.com` and the password `testtest`
 
@@ -17,7 +17,7 @@ It uses [Bootstrap](http://getbootstrap.com) for the layout.
 ## FAQ
 
 1. How do I change the user email?
-  * Go to the `app/seeds/UsersTableSeeder.php` change the email and passord and run the migrations/seeds again `php artisan migrate:refresh --seed` 
+  * Go to the `app/database/seeds/UsersTableSeeder.php` change the email and passord and run the migrations/seeds again `php artisan migrate:refresh --seed` 
 
 2. How do I change the email template?
   * Go to `app/views/emails/auth/reminder.blade.php` and change the template

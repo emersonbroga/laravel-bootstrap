@@ -38,7 +38,7 @@
             <div class="alert alert-success">{{ Session::get('success') }}</div>
         @endif
 
-        <h2 class="form-center-heading">Please sign in</h2>
+        <h2 class="form-center-heading">Welcome</h2>
 
         {{ Form::email('email', Input::old('email'), array('class' => 'form-control first', 'placeholder' => 'Email address') )}}
         {{ $errors->first('email', '<p class="text-danger">:message</p>') }}

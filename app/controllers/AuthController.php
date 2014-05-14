@@ -38,11 +38,11 @@ class AuthController extends Controller
         if(Auth::attempt(array('email' => $email, 'password' => $password), $remember))
         {	
         	// redirects the user to the admin dashboard.
-            // return Redirect::intended('admin/dashboard');
-            die('Welcome to the admin dashboard. <a href="/logout">Logout</a>');
+            return Redirect::route('admin.dashboard');
+            
         }
 
-        return Redirect::action('AuthController@login')
+        return Redirect::route('auth.login')
         	->with('error', 'Invalid Credentials')
         	->withInput();
 
@@ -56,7 +56,7 @@ class AuthController extends Controller
 	public function logout()
     {
     	Auth::logout();
-        return Redirect::action('AuthController@login')
+        return Redirect::route('auth.login')
         	->with('success', 'Successfully‎ logout. See you soon.');
     }
 

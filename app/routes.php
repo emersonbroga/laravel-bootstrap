@@ -12,22 +12,24 @@
 */
 
 // Home
-Route::get('/', 'HomeController@showWelcome');
+Route::get('/', 'HomeController@');
+Route::get('/', array('uses' => 'HomeController@showWelcome', 'as' => 'home.welcome'));
+
 
 // Auth routes
-Route::get('/login', 'AuthController@login');
-Route::get('/logout', 'AuthController@logout');
-Route::post('/login', 'AuthController@postLogin');
-Route::get('/remind', 'AuthController@remind');
-Route::post('/remind', 'AuthController@postRemind');
-Route::get('/password/reset/{token?}', 'AuthController@reset');
-Route::post('/password/reset/{token?}', 'AuthController@postReset');
+Route::get('/login', array('uses' => 'AuthController@login', 'as' => 'auth.login'));
+Route::get('/logout', array('uses' => 'AuthController@logout', 'as' => 'auth.logout'));
+Route::post('/login', array('uses' => 'AuthController@postLogin', 'as' => 'auth.postLogin'));
+Route::get('/remind', array('uses' => 'AuthController@remind', 'as' => 'auth.remind'));
+Route::post('/remind', array('uses' => 'AuthController@postRemind', 'as' => 'auth.postRemind'));
+Route::get('/password/reset/{token?}', array('uses' => 'AuthController@reset', 'as' => 'auth.reset'));
+Route::post('/password/reset/{token?}', array('uses' => 'AuthController@postReset', 'as' => 'auth.postReset'));
 
 // Protected Routes
 Route::group(array('before' => 'auth'), function(){
 
     // put your protected routes here
-    // Route::get('/admin', 'AdminController@dashboard');
+    Route::get('/admin', array('uses' => 'AdminController@dashboard', 'as' => 'admin.dashboard'));
 
 
 });

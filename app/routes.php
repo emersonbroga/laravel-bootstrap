@@ -26,10 +26,21 @@ Route::get('/password/reset/{token?}', array('uses' => 'AuthController@reset', '
 Route::post('/password/reset/{token?}', array('uses' => 'AuthController@postReset', 'as' => 'auth.postReset'));
 
 // Protected Routes
-Route::group(array('before' => 'auth'), function(){
+Route::group(array('before' => 'auth', 'prefix' => 'admin'), function(){
 
     // put your protected routes here
-    Route::get('/admin', array('uses' => 'AdminController@dashboard', 'as' => 'admin.dashboard'));
+    Route::get('/', array('uses' => 'AdminController@dashboard', 'as' => 'admin.dashboard'));
+
+    // users
+    Route::resource('users', 'AdminUsersController', array('names' => array(
+        'index' => 'admin.users.index',
+        'create' => 'admin.users.create',
+        'store' => 'admin.users.store',
+        'show' => 'admin.users.show',
+        'edit' => 'admin.users.edit',
+        'update' => 'admin.users.update',
+        'destroy' => 'admin.users.destroy',
+    )));
 
 
 });

@@ -11,6 +11,9 @@
 |
 */
 
+// lang
+Route::get('lang/{lang}', array('as'=>'lang', 'uses' => 'LangController@change'));
+
 // Home
 Route::get('/', 'HomeController@');
 Route::get('/', array('uses' => 'HomeController@showWelcome', 'as' => 'home.welcome'));
@@ -25,24 +28,13 @@ Route::post('/remind', array('uses' => 'AuthController@postRemind', 'as' => 'aut
 Route::get('/password/reset/{token?}', array('uses' => 'AuthController@reset', 'as' => 'auth.reset'));
 Route::post('/password/reset/{token?}', array('uses' => 'AuthController@postReset', 'as' => 'auth.postReset'));
 
+
 // Protected Routes
 Route::group(array('before' => 'auth', 'prefix' => 'admin'), function(){
-
-    // put your protected routes here
+    // dashboard
     Route::get('/', array('uses' => 'AdminController@dashboard', 'as' => 'admin.dashboard'));
-
     // users
-    Route::resource('users', 'AdminUsersController', array('names' => array(
-        'index' => 'admin.users.index',
-        'create' => 'admin.users.create',
-        'store' => 'admin.users.store',
-        'show' => 'admin.users.show',
-        'edit' => 'admin.users.edit',
-        'update' => 'admin.users.update',
-        'destroy' => 'admin.users.destroy',
-    )));
-
-
+    Route::resource('users', 'AdminUsersController');
 });
 
 

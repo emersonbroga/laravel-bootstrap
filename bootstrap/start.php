@@ -27,7 +27,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-    'local' => array('vagrant-debian-squeeze'),
+    'local' => array('vaprobash'),
     'staging' => array('stage.meuprojeto.com'),
     'production' => array('meuprojeto.com'),
 

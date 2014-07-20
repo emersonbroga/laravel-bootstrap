@@ -29,3 +29,11 @@ It uses [Bootstrap](http://getbootstrap.com) for the layout.
 ### License
 
 This project is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT) using same license as [Laravel](http://laravel.com/)
+
+
+### REFS
+http://www.blacktie.co/2013/12/flatty-app-landing-page/
+http://www.blacktie.co/demo/flatty/#
+https://github.com/emersonbroga/laravel-bootstrap
+http://braziliansquare.com/
+http://grossi.io/2014/working-with-laravel-4-and-wordpress-together/

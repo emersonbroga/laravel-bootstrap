@@ -80,3 +80,7 @@ App::down(function()
 
 require app_path().'/filters.php';
 require app_path().'/helpers.php';
+
+
+// locale
+App::setLocale(Session::get('locale', Config::get('app.locale')));

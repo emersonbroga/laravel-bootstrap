@@ -8,7 +8,7 @@
     
     <div>
         
-        {{ Form::model( $user, array('route' => array('admin.users.update', $user->id ), 'method' => 'put', 'files' => true )) }}
+        {{ Form::model( $record, array('route' => array('admin.users.update', $record->id ), 'method' => 'put', 'files' => true )) }}
            <div class="row">
                 <div class="form-group col-xs-12">
                     {{ Form::label('email', 'Email') }}
@@ -30,13 +30,12 @@
                     {{ $errors->first('password_confirmation', '<p class="text-danger">:message</p>') }}
                 </div>
             </div>
-            @if($isRoot && $user->id !== Auth::user()->id)
+            @if($user->isRoot())
             <div class="row">
                 <div class="form-group col-xs-12">
-                    {{ Form::label('is_admin', 'Is admin') }}
-                    <label class="radio-label">{{ Form::radio('is_admin', '1', (Input::old('is_admin')==1)) }} YES </label>
-                    <label class="radio-label">{{ Form::radio('is_admin', '0', (Input::old('is_admin',0)==0)) }} NO </label>
-                    {{ $errors->first('is_admin', '<p class="text-danger">:message</p>') }}
+                    {{ Form::label('role', 'Role') }}
+                    {{ Form::select('role', $roleOptions, Input::old('role'), ['class' =>'form-control']) }}
+                    {{ $errors->first('role', '<p class="text-danger">:message</p>') }}
                 </div>
             </div>
             @endif

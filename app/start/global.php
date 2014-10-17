@@ -45,10 +45,39 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 | shown, which includes a detailed stack trace during debug.
 |
 */
+App::error(function(Exception $exception, $code){
 
-App::error(function(Exception $exception, $code)
-{
 	Log::error($exception);
+
+    // assumes you have app/views/errors/401.blade.php, etc
+    $view = "errors/$code";
+
+    if (!View::exists($view)){
+    	$view = 'errors/404';
+    }
+
+    $data = array('code' => $code, 'exception' => $exception);
+
+    switch ($code) {
+		case 401:
+		return Response::view($view, $data, $code);
+
+		case 403:
+		return Response::view($view, $data, $code);
+
+		case 500:
+		return Response::view($view, $data, $code);
+
+		case 404:
+		default:
+		return Response::view($view, $data, $code);
+	}
+
+});
+
+App::error(function(\Illuminate\Session\TokenMismatchException $exception, $code){
+	$data = array();
+	return Response::view('errors/token', $data, $code);
 });
 
 /*
@@ -80,6 +109,7 @@ App::down(function()
 
 require app_path().'/filters.php';
 require app_path().'/helpers.php';
+require app_path().'/bind.php';
 
 
 // locale

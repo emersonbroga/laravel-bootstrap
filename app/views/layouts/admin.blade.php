@@ -91,7 +91,7 @@
     {{ HTML::script('http://code.jquery.com/jquery-latest.js') }}
     {{ HTML::script('js/bootstrap.min.js') }}
     
-    {{ HTML::script('js/scripts.js') }}
+    {{ HTML::script('js/admin.js') }}
 
     @section('scripts')
     @show

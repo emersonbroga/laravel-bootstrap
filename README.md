@@ -4,14 +4,23 @@
 This is a simple [Laravel](http://laravel.com/) project with user authentication ready to use.
 It uses [Bootstrap](http://getbootstrap.com) for the layout.
 
-## How to run
+## How to run in 10 steps.
 
-1. Go to the project folder and run `composer update` to install the dependencies
-2. Set the database configs at `app/config/database.php`
-3. Set the email configs at `app/config/mail.php`
-4. Run the migrantions `php artisan migrate` and seed `php artisan db:seed`
-5. Go to the project url and you will see the login button
+1. git clone https://github.com/emersonbroga/laravel-bootstrap.git
+2. cd `laravel-bootstrap`
+3. `vagrant up` ... wait for a while
+4. `vagrant ssh`
+5. `cd /vagrant`
+6. `./scripts/create.db.sh` and folow the instructions (remember the root password is `root`)
+7. Set the database configs at `app/config/local/database.php`
+8. Now run `composer install` to install the dependencies
+9. Run the migrantions `php artisan migrate` and seed `php artisan db:seed`
+10. Go to the project url (default is 192.168.22.10) and you will see the login button
   * You can use the email `admin@admin.com` and the password `testtest`
+
+## Extra
+
+1. Set the email configs at `app/config/local/mail.php` to use the forgot password feature.
 
 
 ## FAQ

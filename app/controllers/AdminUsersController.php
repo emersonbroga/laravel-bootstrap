@@ -1,13 +1,13 @@
 <?php
-class AdminUsersController extends \BaseController
+class AdminUsersController extends \AdminBaseController
 {   
-    protected $user;
+    protected $model;
     protected $passwordReminder;
 
-    public function __construct(User $user, PasswordReminder $passwordReminder)
+    public function __construct(User $model, PasswordReminder $passwordReminder)
     {   
         parent::__construct();
-        $this->user = $user;
+        $this->model = $model;
         $this->passwordReminder = $passwordReminder;
     }
     /** 
@@ -16,15 +16,17 @@ class AdminUsersController extends \BaseController
      */
     public function index()
     {  
-        $perPage = $this->user->getPerPage();
-        if( $this->isRoot ){
-            $users = $this->user;
+        $perPage = $this->model->getPerPage();
+        if( $this->user->isRoot() ){
+            $data = $this->model;
         }else{
-            $users = $this->user->where('id', '=', Auth::user()->id);
+            $data = $this->model->where('id', '=', $this->user->id);
         }
-        $users = $users->paginate( $perPage );
+        $data = $data->paginate( $perPage );
 
-        return View::make('admin.users.index', compact('users'));
+        $data_links = $data->appends(Input::except('page'))->links();
+
+        return View::make('admin.users.index', compact('data', 'data_links'));
     }
 
     /**
@@ -33,7 +35,9 @@ class AdminUsersController extends \BaseController
      */
     public function create()
     {
-        return View::make('admin.users.create');
+        $roleOptions = $this->model->getRoleOptions();
+
+        return View::make('admin.users.create', compact('roleOptions'));
     }
 
     /**
@@ -50,28 +54,28 @@ class AdminUsersController extends \BaseController
            return Redirect::route('admin.users.create')->withInput()->withErrors($validator);
         }
         
-        $user = new $this->user;
-        $user = $this->user->firstOrNew(array('email' => Input::get('email')));
-        if(!$user->id){
-            $user->is_admin = Input::get('is_admin', 0);
-            $user->save();
+        $record = $this->model->firstOrNew(array('email' => Input::get('email')));
+        if(!$record->id){
+            $record->role = Input::get('role');
+            $record->save();
 
-            // save token
-            $pr = new $this->passwordReminder;
-            $pr->email = $user->email;
-            $pr->token = md5(uniqid(strrev($pr->email)));
-            $pr->created_at = new \DateTime();
-            $pr->save();
+            // // save token
+            // $pr = new $this->passwordReminder;
+            // $pr->email = $record->email;
+            // $pr->token = md5(uniqid(strrev($pr->email)));
+            // $pr->created_at = new \DateTime();
+            // $pr->save();
 
-            // send email
-            Mail::send('emails.admin.user.create',['token'=> $pr->token], function($message) use($user)
-            {
-                $message->to($user->email, $user->email)->subject('New admin Account');
-            });
-            return Redirect::route('admin.users.index')->with('success', 'User created');
+            // // send email
+            // Mail::send('emails.admin.user.create',['token'=> $pr->token], function($message) use($record)
+            // {
+            //     $message->to($record->email, $record->email)->subject(trans('project.admin.new-account'));
+            // });
+
+            return Redirect::route('admin.users.index')->with('success', trans('project.admin.success-save'));
         }
 
-        return Redirect::route('admin.users.create')->withInput()->with('error', 'User already exists');
+        return Redirect::route('admin.users.create')->withInput()->with('error', trans('project.admin.already-exists'));
 
     }
 
@@ -82,8 +86,15 @@ class AdminUsersController extends \BaseController
      */
     public function show($id)
     {
-        $user = $this->user->find($id);
-        return View::make('admin.users.show', compact('user'));
+        $model = $this->model->find($id);
+
+        if(!$model) App::abort(404, trans('project.admin.not-found'));
+
+        $roleOptions = $model->getRoleOptions();
+
+        $model->role = $roleOptions[$model->role];
+
+        return View::make('admin.users.show', compact('model'));
     }
 
     /**
@@ -93,15 +104,17 @@ class AdminUsersController extends \BaseController
      */
     public function edit($id)
     {
-        if( $this->isRoot ){
-            $user = $this->user->find($id);
-        }elseif($id == Auth::user()->id ){
-            $user = $this->user->find($id);
+        if( $this->user->isRoot() ){
+            $record = $this->model->find($id);
+        }elseif($id == $this->user->id ){
+            $record = $this->model->find($id);
         }else{
             return Redirect::route('admin.users.index')->with('error', 'Not allowed');
         }
 
-        return View::make('admin.users.edit', compact('user'));
+        $roleOptions = $this->model->getRoleOptions();
+
+        return View::make('admin.users.edit', compact('record', 'roleOptions'));
     }
 
     /**
@@ -110,19 +123,20 @@ class AdminUsersController extends \BaseController
      * @return Response
      */
     public function update($id)
-    {
+    {   
         $rules = array('email' => 'email|unique:users,email,'.$id, 'password' => 'confirmed');
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()){
            return Redirect::route('admin.users.edit', [$id])->withInput()->withErrors($validator);
         }
+        
 
-        if( !$this->isRoot && $id != Auth::user()->id){
-           return Redirect::route('admin.users.index')->with('error', 'Not allowed');
+        if(!$this->user->isRoot() && $id !== $this->user->id){
+            return Redirect::route('admin.users.update', [$id])->withInput()->with('error', trans('project.admin.not-allowed'));
         }
 
-        $input = Input::only('email','password', 'is_admin');
+        $input = Input::only('email','password', 'role');
         
         if(empty($input['password'])){
             unset($input['password']);
@@ -130,12 +144,12 @@ class AdminUsersController extends \BaseController
              $input['password'] = \Hash::make($input['password']);
         }
 
-        $result = $this->user->where('id', '=', $id)->update($input);
-
-        if($result >= 0)
-            return Redirect::route('admin.users.index')->with('success', 'Data updated successfully');
-        else
-            return Redirect::route('admin.users.update', [$id])->withInput()->with('error', 'Error on update');
+        $result = $this->model->where('id', '=', $id)->update($input);
+        if($result >= 0){
+            return Redirect::route('admin.users.index')->with('success', trans('project.admin.success-update'));
+        }else{
+            return Redirect::route('admin.users.update', [$id])->withInput()->with('error', trans('project.admin.error-update'));
+        }
 
     }
 
@@ -146,17 +160,16 @@ class AdminUsersController extends \BaseController
      */
     public function destroy($id)
     {
-        if( $id == Auth::user()->id || !$this->isRoot){
-           return Redirect::route('admin.users.index')->with('error', 'Not allowed');
+        if( $id == $this->user->id || !$this->user->isRoot()){
+           return Redirect::route('admin.users.index')->with('error', trans('project.admin.not-allowed'));
         }
         
-        $result = $this->user->destroy($id);
-        if($result)
-            return Redirect::route('admin.users.index')->with('success', 'Data deleted successfully');
-        else
-            return Redirect::route('admin.users.update', [$id])->withInput()->with('error', 'Error on update');
-
-
+        $result = $this->model->destroy($id);
+        if($result){
+            return Redirect::route('admin.users.index')->with('success', trans('project.admin.success-delete'));
+        }else{
+            return Redirect::route('admin.users.update', [$id])->withInput()->with('error', trans('project.admin.error-delete'));
+        }
     }
 
 }

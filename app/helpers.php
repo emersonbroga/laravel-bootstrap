@@ -61,7 +61,6 @@ if(! function_exists('btn_add'))
 {
     function btn_add( $route )
     {    
-        echo trans('project.btn.add');
         $html = HTML::link( URL::route($route), trans('project.btn.add'), ['class'=>'btn btn-primary btn-xs']);
         return $html;
     }
@@ -107,7 +106,7 @@ if(! function_exists('btn_save'))
 {
     function btn_save()
     {   
-        $html = Form::button('Save', ['class'=>'btn btn-success btn-xs', 'type'=> 'submit'] );
+        $html = Form::button(trans('project.btn.save'), ['class'=>'btn btn-success btn-xs', 'type'=> 'submit'] );
         return $html;
     }
 }

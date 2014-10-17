@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends BaseController
+class AdminController extends \AdminBaseController
 {
     public function dashboard()
     {   

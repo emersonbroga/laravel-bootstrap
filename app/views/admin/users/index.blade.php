@@ -8,7 +8,7 @@
           <h2 class="sub-header">{{ trans('project.admin.list-of', ['name' => trans('project.words.users')]) }}</h2>
           <div class="table-responsive">
 
-            @if(!$users)
+            @if(!$data)
               <div class="alert alert-info"><strong>{{ trans('project.words.user') }}</strong> {{ trans('project.admin.not-found') }}!</div>
             @else
             <table class="table table-striped">
@@ -16,22 +16,20 @@
                 <tr>
                   <th>#</th>
                   <th>Email</th>
-                  <th>Pages</th>
                   <th class="col-xs-2 text-right">{{ btn_add('admin.users.create') }}</th>
                 </tr>
               </thead>
 
               <tbody>
-                @foreach($users as $user)
+                @foreach($data as $record)
                 <tr>
-                  <td>{{{ $user->id }}}</td>
-                  <td>{{{ $user->email }}}</td>
-                  <td>{{{ $user->id }}}
+                  <td>{{{ $record->id }}}</td>
+                  <td>{{{ $record->email }}}</td>
                   <td class="text-right">
-                    {{ btn_edit('admin.users.edit', $user->id) }}
-                    {{ btn_show('admin.users.show', $user->id) }}
-                    @if($user->id !== Auth::user()->id)
-                        {{ btn_delete_confirm('admin.users.show', $user->id) }}
+                    {{ btn_edit('admin.users.edit', $record->id) }}
+                    {{ btn_show('admin.users.show', $record->id) }}
+                    @if($record->id !== $user->id)
+                        {{ btn_delete_confirm('admin.users.show', $record->id) }}
                     @endif
 
                   </td>
@@ -42,7 +40,7 @@
 
             <!-- pagination -->
             
-            {{ $users->links() }}
+            {{ $data_links }}
 
             <!-- / pagination -->
             @endif

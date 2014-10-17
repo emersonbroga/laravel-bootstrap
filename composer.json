@@ -5,7 +5,6 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.1.*",
-		"facebook/php-sdk-v4" : "4.0.*",
 		"fzaninotto/faker" : "1.4.0",
 		"way/generators": "2.*"
 	},
